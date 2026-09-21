@@ -452,18 +452,6 @@ const ModalReserva = ({ isOpen, onClose, onSave, cancha = null, esPresencial = f
                                 </div>
                             </>
                         )}
-                                    </div>
-                                    <input
-                                        ref={fileInputRef}
-                                        type="file"
-                                        accept="image/jpeg,image/png,image/webp,application/pdf"
-                                        onChange={handleFileChange}
-                                        className="hidden"
-                                    />
-                                    {errores.comprobante && <FieldError error={errores.comprobante} touched={true} />}
-                                </div>
-                            </>
-                        )}
 
                         {pagoData.metodo_pago === 'presencial' && (
                             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
