@@ -1,0 +1,29 @@
+Credenciales para el login
+
+user admin:
+
+Correo:
+soportecanchas0@gmail.com
+
+Contraseña:
+terianC1
+
+///////////////////////////////
+
+user empleado:
+
+Correo:
+empleado@sports.com
+
+Contraseña:
+Ccahuatep3
+
+//////////////////////////////
+
+user cliente:
+
+Correo:
+adrian.apaza@sports.com
+
+Contraseña:
+Amongus123XD

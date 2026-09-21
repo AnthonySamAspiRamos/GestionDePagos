@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    /* Opciones de Lenguaje y Entorno */
+    "target": "ES2022",                                  /* Versión moderna de JS, compatible con Node 20 */
+    "module": "CommonJS",                                /* Formato estándar de módulos para Node.js */
+    "lib": ["ES2022", "DOM"],                            /* Librerías base disponibles */
+
+    /* Rutas y Archivos Generados */
+    "rootDir": "./src",                                  /* Carpeta donde está tu código fuente (.ts) */
+    "outDir": "./dist",                                  /* Carpeta donde se guardará el código compilado (.js) */
+    
+    /* Interoperabilidad (CRÍTICO para Express y librerías antiguas) */
+    "esModuleInterop": true,                             /* Permite hacer 'import express from "express"' sin errores */
+    "allowSyntheticDefaultImports": true,                /* Soporte adicional para importaciones por defecto */
+    "forceConsistentCasingInFileNames": true,            /* Evita errores de mayúsculas/minúsculas entre Windows y Linux/Docker */
+    "resolveJsonModule": true,                           /* Te permite importar archivos .json si lo necesitas */
+
+    /* Reglas de Tipado (Modo Estricto) */
+    "strict": true,                                      /* Activa todas las validaciones estrictas de TypeScript */
+    "noImplicitAny": true,                               /* Prohíbe que TypeScript asigne el tipo 'any' automáticamente */
+    "strictNullChecks": true,                            /* Evita errores comunes con valores nulos o indefinidos */
+    
+    /* Optimización de Compilación */
+    "skipLibCheck": true,                                /* Salta la revisión de tipos en la carpeta node_modules (compila más rápido) */
+    "removeComments": true                               /* Elimina los comentarios en el código final de /dist para ahorrar espacio */
+  },
+  "ts-node": {
+    "esm": false,
+    "transpileOnly": true
+  },
+  "include": [
+    "src/**/*"                                           /* Solo compila lo que esté dentro de src/ */
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

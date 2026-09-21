@@ -1,0 +1,37 @@
+# =============================================
+# .gitignore RAÍZ — Sistema de Reservas CD
+# =============================================
+
+# Dependencias
+node_modules/
+**/node_modules/
+
+# Variables de entorno (NUNCA subir al repo)
+.env
+**/.env
+.env.local
+.env.production
+
+# Build del backend compilado
+backend/dist/
+
+# Build del frontend
+frontend/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea/
+
+# Docker - volúmenes locales (no se suben)
+pgdata/
+
+# Archivos subidos (comprobantes, fotos)
+backend/uploads/
