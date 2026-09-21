@@ -53,7 +53,10 @@ const ModalReserva = ({ isOpen, onClose, onSave, cancha = null, esPresencial = f
                 }
                 if (esPresencial) {
                     const res = await api.get('/usuarios?rol=Cliente');
-                    setClientes(res.data.data || res.data || []);
+                    const usuarios = res.data?.data || res.data || [];
+                    setClientes((Array.isArray(usuarios) ? usuarios : []).filter((usuario) =>
+                        String(usuario.rol || '').trim().toLowerCase() === 'cliente'
+                    ));
                 }
             } catch (err) {
                 console.error('Error al cargar datos', err);
@@ -158,12 +161,23 @@ const ModalReserva = ({ isOpen, onClose, onSave, cancha = null, esPresencial = f
             };
             
             if (esPresencial) {
-                payload.id_cliente = Number(formData.id_cliente);
+                const idCliente = Number(formData.id_cliente);
+                if (!Number.isInteger(idCliente) || idCliente <= 0) {
+                    setError('Selecciona un cliente válido antes de continuar.');
+                    setCargando(false);
+                    return;
+                }
+                payload.id_cliente = idCliente;
             }
             
             const res = await api.post('/reservas', payload);
             const idReserva = res.data?.data?.id_reserva || res.data?.id_reserva;
             setIdReservaCreada(idReserva);
+            if (!esPresencial) {
+                onSave();
+                onClose();
+                return;
+            }
             setPaso('pago');
         } catch (err: any) {
             console.error('Error al crear reserva:', err.response?.data);
@@ -287,12 +301,14 @@ const ModalReserva = ({ isOpen, onClose, onSave, cancha = null, esPresencial = f
                                 <select name="id_cliente" value={formData.id_cliente} onChange={handleChange}
                                     className="w-full px-3 py-2.5 border rounded-xl bg-claro-fondo dark:bg-oscuro-fondo">
                                     <option value="">Seleccione un cliente</option>
-                                    {clientes.map(c => (
-                                        <option key={c.id_usuario || c.id} value={c.id_usuario || c.id}>
+                                    {clientes.map(c => {
+                                        const idCliente = c.id_cliente ?? c.id_usuario ?? c.id;
+                                        return <option key={idCliente} value={String(idCliente)}>
                                             {c.nombre} {c.paterno || c.apellido_paterno} - {c.correo}
-                                        </option>
-                                    ))}
+                                        </option>;
+                                    })}
                                 </select>
+                                {clientes.length === 0 && <p className="mt-1 text-xs text-red-600">No se pudieron cargar clientes disponibles.</p>}
                                 {errores.id_cliente && <FieldError error={errores.id_cliente} touched={true} />}
                             </div>
                         )}

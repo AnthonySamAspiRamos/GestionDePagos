@@ -32,15 +32,6 @@ const GestionReservas = () => {
 
     useEffect(() => { cargarReservas(); }, []);
 
-    const admitirReserva = async (id: number) => {
-        try {
-            await api.put(`/reservas/${id}/admitir`);
-            cargarReservas();
-        } catch (error) {
-            alert('Error al admitir reserva');
-        }
-    };
-
     const cancelarReserva = async (id: number) => {
         const motivo = prompt('Motivo de la cancelación:');
         if (!motivo) return;
@@ -55,20 +46,6 @@ const GestionReservas = () => {
     const handleModificar = (reserva: any) => {
         setReservaAEditar(reserva);
         setIsModificarModalOpen(true);
-    };
-
-    // 🚧 Placeholder para el módulo de pagos (Iteración 4)
-    const handlePago = (reserva: any) => {
-        alert(
-            `🚧 Iteración 4 - Gestión de Pagos\n\n` +
-            `Reserva #${reserva.id_reserva}\n` +
-            `Cliente: ${reserva.cliente_nombre} ${reserva.apellido_paterno}\n` +
-            `Cancha: ${reserva.cancha_nombre}\n` +
-            `Fecha: ${new Date(reserva.fecha_reserva).toLocaleDateString()}\n` +
-            `Horario: ${reserva.hora_inicio} - ${reserva.hora_fin}\n\n` +
-            `Este módulo está siendo desarrollado por otro equipo.\n` +
-            `Aquí se registrará el pago de la reserva.`
-        );
     };
 
     if (loading) return <div className="p-8 text-center">Cargando reservas...</div>;
@@ -115,27 +92,11 @@ const GestionReservas = () => {
                                 </td>
                                 <td className="p-3">
                                     <div className="flex gap-2 flex-wrap">
-                                        {/* Admitir - Verde */}
-                                        {r.estado === 'pendiente' && (
-                                            <button onClick={() => admitirReserva(r.id_reserva)}
-                                                className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm">
-                                                ✓ Admitir
-                                            </button>
-                                        )}
-
                                         {/* Modificar - Azul (Solo Admin) */}
                                         {esAdmin && (
                                             <button onClick={() => handleModificar(r)}
                                                 className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm">
                                                 ✎ Modificar
-                                            </button>
-                                        )}
-
-                                        {/* 🚧 Pagar - Para reservas confirmadas (presenciales) */}
-                                        {(r.estado === 'confirmada' || r.estado === 'pendiente_pago') && (
-                                            <button onClick={() => handlePago(r)}
-                                                className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm">
-                                                💳 Pagar
                                             </button>
                                         )}
 

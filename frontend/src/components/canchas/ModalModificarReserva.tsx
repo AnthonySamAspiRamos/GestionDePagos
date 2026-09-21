@@ -10,6 +10,17 @@ interface ModalModificarReservaProps {
     reserva: any | null;
 }
 
+const HORARIOS: [string, string][] = [
+    ['09:00', '10:00'], ['10:00', '11:00'], ['11:00', '12:00'],
+    ['12:00', '13:00'], ['15:00', '16:00'], ['16:00', '17:00'],
+    ['17:00', '18:00'], ['18:00', '19:00'], ['19:00', '20:00'], ['20:00', '21:00']
+];
+
+const minutos = (hora: string) => {
+    const [horas, minutosHora] = hora.slice(0, 5).split(':').map(Number);
+    return horas * 60 + minutosHora;
+};
+
 const ModalModificarReserva = ({ isOpen, onClose, onSave, reserva }: ModalModificarReservaProps) => {
     const [formData, setFormData] = useState({
         fecha_reserva: '',
@@ -68,8 +79,16 @@ const ModalModificarReserva = ({ isOpen, onClose, onSave, reserva }: ModalModifi
         if (!formData.hora_fin) nuevosErrores.hora_fin = 'La hora de fin es obligatoria';
         if (!formData.id_cancha) nuevosErrores.id_cancha = 'Debe seleccionar una cancha';
         
-        if (formData.hora_inicio && formData.hora_fin && formData.hora_inicio >= formData.hora_fin) {
-            nuevosErrores.hora_fin = 'La hora de fin debe ser mayor a la de inicio';
+        if (formData.hora_inicio && formData.hora_fin) {
+            const inicio = minutos(formData.hora_inicio);
+            const fin = minutos(formData.hora_fin);
+            const duracion = fin - inicio;
+            const indiceInicio = HORARIOS.findIndex(([hora]) => hora === formData.hora_inicio.slice(0, 5));
+            const indiceFin = HORARIOS.findIndex(([, hora]) => hora === formData.hora_fin.slice(0, 5));
+            const esContinuo = indiceInicio >= 0 && indiceFin > indiceInicio && indiceFin - indiceInicio <= 3 && Array.from({ length: indiceFin - indiceInicio }, (_, indice) => HORARIOS[indiceInicio + indice][1] === HORARIOS[indiceInicio + indice + 1][0]).every(Boolean);
+            if (duracion <= 0 || !esContinuo) {
+                nuevosErrores.hora_fin = 'Selecciona entre 1 y 3 horas consecutivas';
+            }
         }
         setErrores(nuevosErrores);
         return Object.keys(nuevosErrores).length === 0;
@@ -102,15 +121,11 @@ const ModalModificarReserva = ({ isOpen, onClose, onSave, reserva }: ModalModifi
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
             <div className="w-full max-w-lg bg-claro-tarjeta dark:bg-oscuro-tarjeta rounded-2xl shadow-xl overflow-hidden border border-claro-borde dark:border-oscuro-borde">
                 
-                <div className="flex items-center justify-between px-6 py-4 border-b border-claro-borde dark:border-oscuro-borde">
-                    <h2 className="text-xl font-semibold text-claro-texto dark:text-oscuro-texto">
-                        Modificar Reserva #{reserva?.id_reserva}
-                    </h2>
-                    <button onClick={onClose} className="text-claro-texto2 hover:text-claro-texto">
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+                <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 px-6 py-5 text-white">
+                    <div className="flex items-center justify-between">
+                        <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">Administración · Reserva</p><h2 className="mt-1 text-xl font-semibold">Modificar #{reserva?.id_reserva}</h2></div>
+                        <button onClick={onClose} className="rounded-full border border-white/20 px-3 py-1 text-2xl leading-none text-slate-300 hover:bg-white/10" aria-label="Cerrar">×</button>
+                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -135,7 +150,7 @@ const ModalModificarReserva = ({ isOpen, onClose, onSave, reserva }: ModalModifi
 
                     <div>
                         <label className="block text-sm font-medium mb-1">Fecha *</label>
-                        <input type="date" name="fecha_reserva" value={formData.fecha_reserva} onChange={handleChange}
+                        <input type="date" min={new Date().toISOString().split('T')[0]} name="fecha_reserva" value={formData.fecha_reserva} onChange={handleChange}
                             className="w-full px-3 py-2.5 border rounded-xl bg-claro-fondo dark:bg-oscuro-fondo" />
                         {errores.fecha_reserva && <FieldError error={errores.fecha_reserva} touched={true} />}
                     </div>
@@ -143,16 +158,23 @@ const ModalModificarReserva = ({ isOpen, onClose, onSave, reserva }: ModalModifi
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium mb-1">Hora Inicio *</label>
-                            <input type="time" name="hora_inicio" value={formData.hora_inicio} onChange={handleChange}
-                                className="w-full px-3 py-2.5 border rounded-xl bg-claro-fondo dark:bg-oscuro-fondo" />
+                            <select name="hora_inicio" value={formData.hora_inicio.slice(0, 5)} onChange={handleChange}
+                                className="w-full px-3 py-2.5 border rounded-xl bg-claro-fondo dark:bg-oscuro-fondo">
+                                <option value="">Selecciona inicio</option>
+                                {HORARIOS.map(([inicio]) => <option key={inicio} value={inicio}>{inicio}</option>)}
+                            </select>
                             {errores.hora_inicio && <FieldError error={errores.hora_inicio} touched={true} />}
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1">Hora Fin *</label>
-                            <input type="time" name="hora_fin" value={formData.hora_fin} onChange={handleChange}
-                                className="w-full px-3 py-2.5 border rounded-xl bg-claro-fondo dark:bg-oscuro-fondo" />
+                            <select name="hora_fin" value={formData.hora_fin.slice(0, 5)} onChange={handleChange}
+                                className="w-full px-3 py-2.5 border rounded-xl bg-claro-fondo dark:bg-oscuro-fondo">
+                                <option value="">Selecciona fin</option>
+                                {HORARIOS.map(([, fin]) => <option key={fin} value={fin}>{fin}</option>)}
+                            </select>
                             {errores.hora_fin && <FieldError error={errores.hora_fin} touched={true} />}
                         </div>
+                        <p className="mt-2 text-xs text-claro-texto2">Usa bloques de una hora. La duración máxima es de 3 horas continuas.</p>
                     </div>
 
                     <div>

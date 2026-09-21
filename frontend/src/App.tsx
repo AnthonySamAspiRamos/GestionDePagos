@@ -19,6 +19,7 @@ import ResetPassword from './pages/ResetPassword';
 import MisReservas from './pages/MisReservas';
 import GestionReservas from './pages/GestionReservas';
 import VerificarPagos from './pages/VerificarPagos';
+import DisponibilidadCancha from './pages/DisponibilidadCancha';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route element={<RutasProtegidas />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/canchas" element={<CanchasPage />} />
+            <Route path="/canchas/:id/reservar" element={<DisponibilidadCancha />} />
             <Route path="/panel-admin" element={<PanelAdmin />} />
             <Route path="/perfil" element={<Perfil />} />
             

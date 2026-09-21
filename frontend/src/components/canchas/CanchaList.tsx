@@ -15,7 +15,6 @@ import { CanchaCard } from './CanchaCard';
 import { CanchaModal } from './CanchaModal';
 import { canchaApi } from './cancha.api';
 import type { Cancha, CanchaFormData, DisciplinaOption } from './cancha.types';
-import ModalReserva from './ModalReserva';
 
 
 const DISCIPLINAS: DisciplinaOption[] = [
@@ -56,8 +55,6 @@ export const CanchaList: React.FC<CanchaListProps> = ({
   const [canchaToEdit, setCanchaToEdit] = useState<Cancha | null>(null);
   const [notification, setNotification] = useState<{ msg: string; type: 'success' | 'error' | 'info' } | null>(null);
 
-  const [isReservaModalOpen, setIsReservaModalOpen] = useState(false);
-  const [canchaParaReservar, setCanchaParaReservar] = useState<Cancha | null>(null);
 
   // Función para cargar canchas desde el backend
   const cargarCanchas = async (disciplina = activeDisciplina) => {
@@ -186,9 +183,7 @@ export const CanchaList: React.FC<CanchaListProps> = ({
         return;
     }
 
-    // Si está logueado, abrir el modal de reserva
-    setCanchaParaReservar(cancha);
-    setIsReservaModalOpen(true);
+    navigate(`/canchas/${cancha.id_cancha}/reservar`);
 };
 
   // Filtrado en memoria por texto de búsqueda
@@ -316,18 +311,6 @@ export const CanchaList: React.FC<CanchaListProps> = ({
           canchaToEdit={canchaToEdit}
         />
       )}
-      {/* Modal de Reserva */}
-    <ModalReserva
-      isOpen={isReservaModalOpen}
-      onClose={() => setIsReservaModalOpen(false)}
-      onSave={() => {
-          showNotification('Reserva creada exitosamente', 'success');
-          cargarCanchas(); // Refrescar la lista
-      }}
-      cancha={canchaParaReservar}
-      esPresencial={usuario?.rol === 'Empleado' || usuario?.rol === 'empleado' || 
-                  usuario?.rol === 'Admin' || usuario?.rol === 'Administrador'}
-    />
     </section>
   );
 };

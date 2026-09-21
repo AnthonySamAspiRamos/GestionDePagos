@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import ModalReserva from '../components/canchas/ModalReserva';
+import PagoDemo from './PagoDemo';
+import { obtenerAdicionalesReserva } from '../utils/reservaExtras';
 
 const MisReservas = () => {
     const [reservas, setReservas] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
-    const { usuario } = useAuth();
+    const [reservaPago, setReservaPago] = useState<any | null>(null);
 
     const cargarReservas = async () => {
         try {
@@ -81,10 +82,10 @@ const MisReservas = () => {
                                             {/* ✅ BOTÓN DE PAGAR - SIEMPRE VISIBLE (excepto canceladas) */}
                                             {r.estado !== 'cancelada' && (
                                                 <button
-                                                    onClick={() => alert('🚧 Iteración 4 - Gestión de Pagos\n\nEste módulo está siendo desarrollado por otro equipo.\n\nPronto podrás completar tu pago aquí.')}
+                                                    onClick={() => setReservaPago({ ...r, detallesIniciales: obtenerAdicionalesReserva(r.id_reserva) })}
                                                     className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
                                                 >
-                                                    💳 Pagar
+                                                    💳 Pagar o reintentar
                                                 </button>
                                             )}
 
@@ -112,6 +113,13 @@ const MisReservas = () => {
                 onSave={cargarReservas}
                 cancha={null}
             />
+            {reservaPago && (
+                <PagoDemo
+                    reserva={reservaPago}
+                    onClose={() => setReservaPago(null)}
+                    onComplete={cargarReservas}
+                />
+            )}
         </div>
     );
 };
