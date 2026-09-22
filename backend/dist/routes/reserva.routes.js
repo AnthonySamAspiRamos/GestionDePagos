@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const reserva_controller_1 = require("../controllers/reserva.controller");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
+const router = (0, express_1.Router)();
+router.post('/', authMiddleware_1.verificarToken, reserva_controller_1.ReservaController.crear);
+router.get('/mis-reservas', authMiddleware_1.verificarToken, reserva_controller_1.ReservaController.misReservas);
+router.get('/', [authMiddleware_1.verificarToken, authMiddleware_1.esAdminOEmpleado], reserva_controller_1.ReservaController.todas);
+router.put('/:id/admitir', [authMiddleware_1.verificarToken, authMiddleware_1.esAdminOEmpleado], reserva_controller_1.ReservaController.admitir);
+router.put('/:id/cancelar', authMiddleware_1.verificarToken, reserva_controller_1.ReservaController.cancelar);
+router.put('/:id', [authMiddleware_1.verificarToken, authMiddleware_1.esAdmin], reserva_controller_1.ReservaController.modificar);
+exports.default = router;

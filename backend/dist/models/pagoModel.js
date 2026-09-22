@@ -1,16 +1,9 @@
-import { pool } from '../config/database';
-
-export const PagoModel = {
-    crearPago: async (data: {
-        id_reserva: number;
-        monto: number;
-        metodo_pago: string;
-        tipo_registro: string;
-        referencia_pasarela?: string | null;
-        nro_comprobante?: string | null;
-        comprobante_url?: string | null;
-        estado?: string;
-    }) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PagoModel = void 0;
+const database_1 = require("../config/database");
+exports.PagoModel = {
+    crearPago: async (data) => {
         const query = `
             INSERT INTO pago 
             (id_reserva, monto, metodo_pago, tipo_registro, referencia_pasarela, nro_comprobante, estado, comprobante_url)
@@ -27,12 +20,10 @@ export const PagoModel = {
             data.estado || 'pendiente_verificacion',
             data.comprobante_url || null
         ];
-
-        const result = await pool.query(query, values);
+        const result = await database_1.pool.query(query, values);
         return result.rows[0];
     },
-
-    obtenerPorReserva: async (id_reserva: number) => {
+    obtenerPorReserva: async (id_reserva) => {
         const query = `
             SELECT p.*, u.nombre, u.apellido_paterno, u.correo
             FROM pago p
@@ -41,22 +32,20 @@ export const PagoModel = {
             JOIN usuario u ON cl.id_cliente = u.id_usuario
             WHERE p.id_reserva = $1;
         `;
-        const result = await pool.query(query, [id_reserva]);
+        const result = await database_1.pool.query(query, [id_reserva]);
         return result.rows[0];
     },
-
-    actualizarComprobante: async (id_pago: number, comprobante_url: string) => {
+    actualizarComprobante: async (id_pago, comprobante_url) => {
         const query = `
             UPDATE pago 
             SET comprobante_url = $1, estado = 'pendiente_verificacion'
             WHERE id_pago = $2
             RETURNING *;
         `;
-        const result = await pool.query(query, [comprobante_url, id_pago]);
+        const result = await database_1.pool.query(query, [comprobante_url, id_pago]);
         return result.rows[0];
     },
-
-    verificarPago: async (id_pago: number, estado: string, motivo_rechazo?: string | null) => {
+    verificarPago: async (id_pago, estado, motivo_rechazo) => {
         const query = `
             UPDATE pago 
             SET estado = $1, fecha_pago = now()
@@ -65,11 +54,10 @@ export const PagoModel = {
             RETURNING *;
         `;
         const values = motivo_rechazo ? [estado, id_pago, motivo_rechazo] : [estado, id_pago];
-        const result = await pool.query(query, values);
+        const result = await database_1.pool.query(query, values);
         return result.rows[0];
     },
-
-    obtenerHistorialPagos: async (id_cliente: number) => {
+    obtenerHistorialPagos: async (id_cliente) => {
         const query = `
             SELECT p.*, r.fecha_reserva, r.hora_inicio, r.hora_fin, c.nombre as cancha_nombre
             FROM pago p
@@ -78,10 +66,9 @@ export const PagoModel = {
             WHERE r.id_cliente = $1
             ORDER BY p.fecha_pago DESC;
         `;
-        const result = await pool.query(query, [id_cliente]);
+        const result = await database_1.pool.query(query, [id_cliente]);
         return result.rows;
     },
-
     obtenerPagosPendientes: async () => {
         const query = `
             SELECT p.*, 
@@ -96,13 +83,12 @@ export const PagoModel = {
             WHERE p.estado IN ('pendiente', 'pendiente_verificacion')
             ORDER BY p.fecha_pago DESC;
         `;
-        const result = await pool.query(query);
+        const result = await database_1.pool.query(query);
         return result.rows;
     },
-
-    eliminarPago: async (id_reserva: number) => {
+    eliminarPago: async (id_reserva) => {
         const query = `DELETE FROM pago WHERE id_reserva = $1 RETURNING *;`;
-        const result = await pool.query(query, [id_reserva]);
+        const result = await database_1.pool.query(query, [id_reserva]);
         return result.rows[0];
     }
 };

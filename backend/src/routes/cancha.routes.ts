@@ -26,6 +26,13 @@ const router = Router();
 router.get('/', (req, res) => canchaController.getAll(req, res));
 
 /**
+ * @route   GET /api/canchas/:id/reservas
+ * @desc    Consultar reservas de una cancha por mes o por fecha
+ * @access  Público
+ */
+router.get('/:id/reservas', (req, res) => canchaController.getReservasPorCancha(req, res));
+
+/**
  * @route   GET /api/canchas/:id
  * @desc    Obtener el detalle de una cancha específica por su ID
  * @access  Público

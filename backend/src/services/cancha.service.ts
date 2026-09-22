@@ -99,7 +99,34 @@ export class CanchaService {
   }
 
   /**
-   * 3. CREAR UNA NUEVA CANCHA
+   * 3. OBTENER RESERVAS DE UNA CANCHA POR MES O FECHA
+   */
+  async getReservasDeCancha(id: number, filtro?: { mes?: string; fecha?: string }): Promise<any[]> {
+    let sql = `
+      SELECT id_reserva, fecha_reserva, hora_inicio, hora_fin, estado
+      FROM reserva
+      WHERE id_cancha = $1
+        AND estado NOT IN ('cancelada', 'rechazada')
+    `;
+
+    const values: any[] = [id];
+
+    if (filtro?.fecha) {
+      values.push(filtro.fecha);
+      sql += ` AND fecha_reserva = $${values.length}`;
+    } else if (filtro?.mes) {
+      values.push(filtro.mes);
+      sql += ` AND TO_CHAR(fecha_reserva, 'YYYY-MM') = $${values.length}`;
+    }
+
+    sql += ` ORDER BY fecha_reserva ASC, hora_inicio ASC;`;
+
+    const result = await pool.query(sql, values);
+    return result.rows;
+  }
+
+  /**
+   * 4. CREAR UNA NUEVA CANCHA
    */
   async createCancha(data: CreateCanchaDTO): Promise<Cancha> {
     const sql = `
@@ -149,7 +176,7 @@ export class CanchaService {
   }
 
   /**
-   * 4. ACTUALIZAR PARCIALMENTE UNA CANCHA (PATCH)
+   * 5. ACTUALIZAR PARCIALMENTE UNA CANCHA (PATCH)
    */
   async updateCancha(id: number, data: UpdateCanchaDTO): Promise<Cancha | null> {
     const fields = Object.keys(data) as (keyof UpdateCanchaDTO)[];
@@ -203,7 +230,7 @@ export class CanchaService {
   }
 
   /**
-   * 5. ELIMINAR UNA CANCHA
+   * 6. ELIMINAR UNA CANCHA
    */
   async deleteCancha(id: number): Promise<boolean> {
     const sql = `

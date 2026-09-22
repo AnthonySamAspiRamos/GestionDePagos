@@ -102,6 +102,49 @@ export class CanchaController {
   }
 
   /**
+   * GET /api/canchas/:id/reservas
+   */
+  async getReservasPorCancha(req: Request, res: Response): Promise<void> {
+    try {
+      const rawId = extractString(req.params.id);
+      if (!rawId) {
+        res.status(400).json({
+          success: false,
+          message: 'Debe especificar el ID de la cancha',
+        });
+        return;
+      }
+
+      const id = parseInt(rawId, 10);
+      if (isNaN(id)) {
+        res.status(400).json({
+          success: false,
+          message: 'El ID de la cancha debe ser un número entero válido',
+        });
+        return;
+      }
+
+      const { mes, fecha } = req.query;
+      const reservas = await canchaService.getReservasDeCancha(id, {
+        mes: typeof mes === 'string' ? mes : undefined,
+        fecha: typeof fecha === 'string' ? fecha : undefined,
+      });
+
+      res.status(200).json({
+        success: true,
+        data: reservas,
+      });
+    } catch (error) {
+      console.error(`Error en CanchaController.getReservasPorCancha (${req.params.id}):`, error);
+      res.status(500).json({
+        success: false,
+        message: 'Error interno del servidor al consultar la disponibilidad',
+        error: (error as Error).message,
+      });
+    }
+  }
+
+  /**
    * POST /api/canchas
    */
   async create(req: Request, res: Response): Promise<void> {
