@@ -1,0 +1,116 @@
+============================================
+ CREDENCIALES - Sistema de Reservas CD
+ Versión 2.0 - Septiembre 2026
+============================================
+
+🔐 USUARIOS DE PRUEBA (Base de datos)
+
+─────────────────────────────────────────
+ 👑 ADMINISTRADOR
+─────────────────────────────────────────
+ Correo:      jorge.fernandez@canchasbo.com
+ Contraseña:  123456
+ Permisos:    Gestión completa del sistema
+              (usuarios, canchas, reservas, pagos)
+
+─────────────────────────────────────────
+ 👑 ADMINISTRADOR (alternativo)
+─────────────────────────────────────────
+ Correo:      carla.mamani@canchasbo.com
+ Contraseña:  123456
+ Permisos:    Gestión completa del sistema
+
+─────────────────────────────────────────
+ 👨‍💼 EMPLEADO
+─────────────────────────────────────────
+ Correo:      luis.choque@canchasbo.com
+ Contraseña:  123456
+ Permisos:    Gestión de reservas
+              Verificar pagos
+
+─────────────────────────────────────────
+ 👤 CLIENTE
+─────────────────────────────────────────
+ Correo:      maria.lopez@gmail.com
+ Contraseña:  123456
+ Permisos:    Reservar canchas
+              Pagar reservas
+              Ver historial
+
+============================================
+🌐 ACCESOS AL SISTEMA
+============================================
+
+ Frontend (Aplicación web):
+   http://localhost:5173
+
+ Backend (API REST):
+   http://localhost:4000
+
+ pgAdmin (Gestión visual de BD):
+   http://localhost:5050
+   Email:    admin@sports.com
+   Password: admin
+
+ PostgreSQL (Conexión directa):
+   Host:     localhost
+   Port:     5432
+   Database: bdcomplejodeportivo
+   User:     limber
+   Password: 123456
+
+============================================
+ FLUJO DE PAGOS
+============================================
+
+ Métodos de pago disponibles:
+   🏢 Presencial      → Reserva confirmada al instante
+    Tarjeta Débito  → Requiere comprobante (obligatorio)
+   💎 Tarjeta Crédito → Requiere comprobante (obligatorio)
+   📱 QR              → Requiere comprobante (obligatorio)
+
+ Para pagos virtuales:
+   - Subir comprobante (JPG, PNG, WEBP o PDF, máx 5MB)
+   - Ingresar número de referencia (opcional)
+   - El admin/empleo verifica desde /verificar-pagos
+
+============================================
+📋 ENDPOINTS PRINCIPALES DE LA API
+============================================
+
+ Autenticación:
+   POST /api/auth/login
+   POST /api/auth/registrar
+
+ Canchas:
+   GET    /api/canchas
+   POST   /api/canchas          (Admin)
+   PATCH  /api/canchas/:id      (Admin)
+   DELETE /api/canchas/:id      (Admin)
+
+ Reservas:
+   POST   /api/reservas
+   GET    /api/reservas/mis-reservas
+   GET    /api/reservas         (Admin/Empleado)
+   PUT    /api/reservas/:id/admitir    (Admin/Empleado)
+   PUT    /api/reservas/:id/cancelar
+
+ Pagos:
+   POST   /api/pagos/procesar-con-comprobante
+   PATCH  /api/pagos/verificar/:id_pago  (Admin/Empleado)
+   GET    /api/pagos/pendientes          (Admin/Empleado)
+   GET    /api/pagos/historial
+   POST   /api/pagos/reintentar/:id_reserva
+
+============================================
+ NOTAS IMPORTANTES
+============================================
+
+ - Todos los passwords de prueba son: 123456
+ - La sesión expira después de 15 minutos de inactividad
+ - Para cancelar una reserva como cliente, debe ser
+   con al menos 24 horas de anticipación
+ - Los comprobantes de pago se guardan en:
+   backend/uploads/comprobantes/
+
+============================================
