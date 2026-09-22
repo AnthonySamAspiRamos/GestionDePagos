@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const cancha_controller_1 = require("../controllers/cancha.controller");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
+const router = (0, express_1.Router)();
+router.get('/', (req, res) => cancha_controller_1.canchaController.getAll(req, res));
+router.get('/:id/reservas', (req, res) => cancha_controller_1.canchaController.getReservasPorCancha(req, res));
+router.get('/:id', (req, res) => cancha_controller_1.canchaController.getById(req, res));
+router.post('/', authMiddleware_1.verificarToken, authMiddleware_1.esAdmin, (req, res) => cancha_controller_1.canchaController.create(req, res));
+router.patch('/:id', authMiddleware_1.verificarToken, authMiddleware_1.esAdmin, (req, res) => cancha_controller_1.canchaController.update(req, res));
+router.delete('/:id', authMiddleware_1.verificarToken, authMiddleware_1.esAdmin, (req, res) => cancha_controller_1.canchaController.delete(req, res));
+exports.default = router;
