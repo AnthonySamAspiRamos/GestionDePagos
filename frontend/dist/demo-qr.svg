@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="QR demo">
+  <rect width="240" height="240" rx="16" fill="#fff"/>
+  <g fill="#0f172a">
+    <path d="M16 16h64v64H16zM28 28v40h40V28zM40 40h16v16H40zM160 16h64v64h-64zM172 28v40h40V28zM184 40h16v16h-16zM16 160h64v64H16zM28 172v40h40v-40zM40 184h16v16H40z"/>
+    <path d="M96 16h16v16H96zM120 16h16v32h-16zM88 48h24v16H88zM104 72h32v16h-32zM152 88h16v24h-16zM184 96h16v24h-16zM208 88h16v40h-16zM88 96h16v40H88zM112 104h24v16h-24zM128 128h24v16h-24zM160 128h16v24h-16zM192 136h32v16h-32zM96 152h16v24H96zM120 160h16v16h-16zM144 168h24v16h-24zM176 160h16v40h-16zM200 168h24v16h-24zM88 200h32v24H88zM128 192h16v32h-16zM152 208h16v16h-16z"/>
+  </g>
+  <text x="120" y="238" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#475569">QR DEMO</text>
+</svg>

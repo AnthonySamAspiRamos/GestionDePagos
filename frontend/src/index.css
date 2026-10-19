@@ -1,0 +1,119 @@
+@import './styles/canchas-landing.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   RESPONSIVE: TABLAS EN MÓVIL
+   Convierte las tablas en tarjetas apiladas
+   ========================================================= */
+
+@media (max-width: 768px) {
+    /* Ocultar la cabecera de la tabla */
+    table thead {
+        display: none;
+    }
+
+    /* Convertir cada fila en una tarjeta */
+    table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        background-color: rgba(255, 255, 255, 0.02);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Modo oscuro: borde más visible */
+    .dark table tr {
+        border-color: rgba(255, 255, 255, 0.1);
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Cada celda se convierte en un bloque */
+    table td {
+        display: block;
+        text-align: left;
+        padding: 0.5rem 0 !important;
+        border: none;
+        position: relative;
+    }
+
+    /* Mostrar la etiqueta de cada celda (data-label) */
+    table td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 600;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(107, 114, 128, 1);
+        margin-bottom: 0.35rem;
+    }
+
+    /* Modo oscuro: color de la etiqueta */
+    .dark table td::before {
+        color: rgba(156, 163, 175, 1);
+    }
+
+    /* La celda de acciones ocupa todo el ancho */
+    table td[data-label="Acciones"] {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem !important;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .dark table td[data-label="Acciones"] {
+        border-top-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Los botones dentro de acciones ocupan el ancho disponible */
+    table td[data-label="Acciones"] button {
+        flex: 1;
+        min-width: 110px;
+        justify-content: center;
+    }
+
+    /* Reducir padding del contenedor en móvil */
+    .p-6 {
+        padding: 1rem !important;
+    }
+
+    /* Títulos más pequeños en móvil */
+    h1 {
+        font-size: 1.25rem !important;
+    }
+
+    /* El header con el botón se apila en móvil */
+    .flex.justify-between.items-center.mb-6 {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch !important;
+    }
+
+    .flex.justify-between.items-center.mb-6 button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-in {
+    animation: slide-in 0.3s ease-out;
+}
