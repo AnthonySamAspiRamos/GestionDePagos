@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const evento_controller_1 = require("../controllers/evento.controller");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
+const router = (0, express_1.Router)();
+router.get('/', authMiddleware_1.verificarToken, evento_controller_1.EventoController.obtenerEventos);
+router.get('/servicios', authMiddleware_1.verificarToken, evento_controller_1.EventoController.obtenerServicios);
+router.get('/mis-inscripciones', authMiddleware_1.verificarToken, authMiddleware_1.esCliente, evento_controller_1.EventoController.misInscripciones);
+router.post('/:id/inscribir', authMiddleware_1.verificarToken, authMiddleware_1.esCliente, evento_controller_1.EventoController.inscribir);
+router.patch('/:id/cancelar-inscripcion', authMiddleware_1.verificarToken, authMiddleware_1.esCliente, evento_controller_1.EventoController.cancelarInscripcion);
+router.post('/', authMiddleware_1.verificarToken, authMiddleware_1.esAdminOEmpleado, evento_controller_1.EventoController.crearEvento);
+router.put('/:id', authMiddleware_1.verificarToken, authMiddleware_1.esAdminOEmpleado, evento_controller_1.EventoController.editarEvento);
+router.patch('/:id/cancelar', authMiddleware_1.verificarToken, authMiddleware_1.esAdminOEmpleado, evento_controller_1.EventoController.cancelarEvento);
+router.patch('/:id/reprogramar', authMiddleware_1.verificarToken, authMiddleware_1.esAdminOEmpleado, evento_controller_1.EventoController.reprogramarEvento);
+exports.default = router;

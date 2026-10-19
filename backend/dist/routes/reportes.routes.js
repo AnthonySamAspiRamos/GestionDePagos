@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const reportes_controller_1 = require("../controllers/reportes.controller");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
+const router = (0, express_1.Router)();
+router.post('/pagos', [authMiddleware_1.verificarToken, authMiddleware_1.esAdmin], reportes_controller_1.ReportesController.obtenerDatosPagos);
+router.post('/metricasPagos', [authMiddleware_1.verificarToken, authMiddleware_1.esAdmin], reportes_controller_1.ReportesController.obtenerMetricasPagos);
+router.post('/heatmap', [authMiddleware_1.verificarToken, authMiddleware_1.esAdmin], reportes_controller_1.ReportesController.obtenerDatosOcupacion);
+router.get('/listarCanchas', [authMiddleware_1.verificarToken, authMiddleware_1.esAdmin], reportes_controller_1.ReportesController.listarCanchas);
+router.post('/totalReservas', [authMiddleware_1.verificarToken, authMiddleware_1.esAdmin], reportes_controller_1.ReportesController.obtenerTotalReservas);
+router.post('/horasOcupadas', [authMiddleware_1.verificarToken, authMiddleware_1.esAdmin], reportes_controller_1.ReportesController.obtenerHorasOcupadas);
+router.post('/mayorDemanda', [authMiddleware_1.verificarToken, authMiddleware_1.esAdmin], reportes_controller_1.ReportesController.obtenerMayorDemanda);
+router.post('/rentabilidadServicios', [authMiddleware_1.verificarToken, authMiddleware_1.esAdmin], reportes_controller_1.ReportesController.obtenerRentabilidadServicios);
+router.post('/comportamiento-usuarios', [authMiddleware_1.verificarToken, authMiddleware_1.esAdmin], reportes_controller_1.ReportesController.obtenerComportamientoUsuarios);
+exports.default = router;

@@ -1,0 +1,71 @@
+### ============================================================================
+### ARCHIVO: canchas.http
+### PROPÓSITO: Pruebas rápidas de endpoints del CRUD de Canchas
+### Puedes ejecutar estas peticiones directamente con la extensión "REST Client" 
+### de VS Code o importarlas en Postman / Insomnia.
+### ============================================================================
+
+@baseUrl = http://localhost:4000/api
+
+### 1. Health check del servidor
+GET {{baseUrl}}/health
+
+###
+
+### 2. Obtener todas las canchas
+GET {{baseUrl}}/canchas
+
+###
+
+### 3. Filtrar canchas por disciplina (ej: futbol, padel, basquet)
+GET {{baseUrl}}/canchas?disciplina=futbol
+
+###
+
+### 4. Filtrar canchas por estado (ej: disponible, mantenimiento)
+GET {{baseUrl}}/canchas?estado=disponible
+
+###
+
+### 5. Buscar canchas por texto (nombre o ubicación)
+GET {{baseUrl}}/canchas?search=Central
+
+###
+
+### 6. Obtener una cancha por ID
+GET {{baseUrl}}/canchas/1
+
+###
+
+### 7. Crear una nueva cancha (POST)
+POST {{baseUrl}}/canchas
+Content-Type: application/json
+
+{
+  "nombre": "Cancha Sintética Los Andes",
+  "disciplina": "futbol",
+  "capacidad": 14,
+  "precio_hora": 110.00,
+  "estado": "disponible",
+  "ubicacion": "Bloque D - Exterior",
+  "largo": 42.00,
+  "ancho": 22.00,
+  "hora_apertura": "08:00:00",
+  "hora_cierre": "23:00:00"
+}
+
+###
+
+### 8. Actualizar parcialmente una cancha (PATCH)
+PATCH {{baseUrl}}/canchas/1
+Content-Type: application/json
+
+{
+  "precio_hora": 135.50,
+  "estado": "disponible"
+}
+
+###
+
+### 9. Eliminar una cancha (DELETE)
+DELETE {{baseUrl}}/canchas/7
